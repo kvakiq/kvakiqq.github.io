@@ -7,7 +7,7 @@
     <!-- Подключаем шрифты для иконок соцсетей -->
     <link rel="stylesheet" href="https://cloudflare.com">
     <style>
-        /* Базовые настройки и темный "живой" фон с мягким переливом */
+        /* Базовые настройки и темный черно-красный фон с мягким переливом */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
@@ -19,10 +19,10 @@
             min-height: 100vh;
             color: #e2e8f0;
             
-            /* Темный абстрактный фон с эффектом свечения */
-            background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
+            /* Черно-красный глубокий градиент с эффектом тления */
+            background: linear-gradient(-45deg, #0a0a0a, #1a0505, #3a0007, #120002, #0a0a0a);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            animation: gradientBG 12s ease infinite;
             overflow: hidden; /* Скрывает полосы прокрутки при анимации появления */
         }
 
@@ -35,16 +35,16 @@
 
         /* Стильная темная карточка с анимацией появления */
         .card {
-            background: rgba(30, 41, 59, 0.75);
+            background: rgba(20, 20, 25, 0.8);
             padding: 40px 30px;
             border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
             text-align: center;
             width: 100%;
             max-width: 340px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 0, 0, 0.15); /* Едва заметная красная неоновая рамка */
             
             /* Подключение анимации появления */
             animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -69,8 +69,8 @@
             height: 96px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             margin-bottom: 15px;
         }
 
@@ -84,7 +84,7 @@
         }
         .subtitle {
             font-size: 14px;
-            color: #94a3b8;
+            color: #a1a1aa;
             margin: 0 0 30px 0;
         }
 
@@ -96,14 +96,14 @@
             gap: 12px; /* Расстояние между иконкой и текстом */
             margin-bottom: 14px;
             padding: 14px;
-            background: rgba(51, 65, 85, 0.6);
+            background: rgba(39, 39, 42, 0.6);
             color: #ffffff;
             text-decoration: none;
             border-radius: 14px;
             font-weight: 600;
             font-size: 16px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         /* Белые иконки по умолчанию внутри кнопок */
@@ -112,14 +112,14 @@
             transition: transform 0.3s ease;
         }
 
-        /* Эффект при наведении на ЛЮБУЮ кнопку */
+        /* Эффект при наведении на любую кнопку */
         .link-btn:hover {
             transform: translateY(-3px);
             color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
         }
         
-        /* Слегка покачиваем иконку при наведении */
+        /* Слегка увеличиваем иконку при наведении */
         .link-btn:hover i {
             transform: scale(1.1);
         }
@@ -128,12 +128,14 @@
         .tg-btn:hover {
             background: #24A1DE;
             box-shadow: 0 6px 20px rgba(36, 161, 222, 0.4);
+            border-color: #24A1DE;
         }
 
         /* Фирменный стиль ВКонтакте при наведении */
         .vk-btn:hover {
             background: #0077FF;
             box-shadow: 0 6px 20px rgba(0, 119, 255, 0.4);
+            border-color: #0077FF;
         }
 
         /* Последняя кнопка без нижнего отступа */
