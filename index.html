@@ -3,31 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAPTER kvakiq</title>
+    <title>Моя визитка</title>
+    <!-- Подключаем шрифты для иконок соцсетей -->
+    <link rel="stylesheet" href="https://cloudflare.com">
     <style>
-        /* Базовые настройки и красивый градиент на фоне */
+        /* Базовые настройки и темный "живой" фон с мягким переливом */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
+            color: #e2e8f0;
+            
+            /* Темный абстрактный фон с эффектом свечения */
+            background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden; /* Скрывает полосы прокрутки при анимации появления */
         }
 
-        /* Контейнер-карточка */
+        /* Анимация переливания фоновых цветов */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Стильная темная карточка с анимацией появления */
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 35px 25px;
+            background: rgba(30, 41, 59, 0.75);
+            padding: 40px 30px;
             border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
             width: 100%;
             max-width: 340px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            
+            /* Подключение анимации появления */
+            animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            opacity: 0; /* Изначально скрыта до начала анимации */
+        }
+
+        /* Анимация плавного проявления карточки снизу вверх */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Круглая аватарка */
@@ -36,59 +69,96 @@
             height: 96px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             margin-bottom: 15px;
         }
 
         /* Имя и подпись */
         h1 {
-            font-size: 22px;
-            color: #2d3748;
-            margin: 0 0 5px 0;
+            font-size: 24px;
+            color: #ffffff;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
         .subtitle {
             font-size: 14px;
-            color: #718096;
-            margin: 0 0 25px 0;
+            color: #94a3b8;
+            margin: 0 0 30px 0;
         }
 
-        /* Стильные кнопки-ссылки */
+        /* Базовый стиль кнопок-ссылок */
         .link-btn {
-            display: block;
-            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px; /* Расстояние между иконкой и текстом */
+            margin-bottom: 14px;
             padding: 14px;
-            background: #fff;
-            color: #4a5568;
+            background: rgba(51, 65, 85, 0.6);
+            color: #ffffff;
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 600;
-            transition: all 0.2s ease-in-out;
-            border: 2px solid #e2e8f0;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Эффект при наведении */
+        /* Белые иконки по умолчанию внутри кнопок */
+        .link-btn i {
+            color: #ffffff;
+            transition: transform 0.3s ease;
+        }
+
+        /* Эффект при наведении на ЛЮБУЮ кнопку */
         .link-btn:hover {
-            background: #764ba2;
-            color: #fff;
-            border-color: #764ba2;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
+            transform: translateY(-3px);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Слегка покачиваем иконку при наведении */
+        .link-btn:hover i {
+            transform: scale(1.1);
+        }
+
+        /* Фирменный стиль Telegram при наведении */
+        .tg-btn:hover {
+            background: #24A1DE;
+            box-shadow: 0 6px 20px rgba(36, 161, 222, 0.4);
+        }
+
+        /* Фирменный стиль ВКонтакте при наведении */
+        .vk-btn:hover {
+            background: #0077FF;
+            box-shadow: 0 6px 20px rgba(0, 119, 255, 0.4);
+        }
+
+        /* Последняя кнопка без нижнего отступа */
+        .link-btn:last-child {
+            margin-bottom: 0;
         }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <!-- Ссылка на вашу аватарку (можно из GitHub или соцсети) -->
-        <img class="avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9UsFOOWdzbD7eVY4LJDkigodHIhjI3MMKr0iPoLHpQQ&s=10" alt="Аватар">
+        <!-- Ваша аватарка с GitHub (замените 'ваш_логин' на ваш никнейм на GitHub) -->
+        <img class="avatar" src="https://github.com" alt="Аватар">
         
-        <h1>kvakiq</h1>
-        <p class="subtitle">Нажми на кнопки ниже</p>
+        <h1>Ваше Имя</h1>
+        <p class="subtitle">Краткое описание профиля</p>
 
-        <!-- Блок ссылок -->
-        <a class="link-btn" href="https://t.me/kvakiq" target="_blank">Telegram</a>
-        <a class="link-btn" href="https://vk.com/kvakiq" target="_blank">ВКонтакте</a>
+        <!-- Блок ссылок с иконками и фирменными классами (tg-btn и vk-btn) -->
+        <a class="link-btn tg-btn" href="https://t.me" target="_blank">
+            <i class="fab fa-telegram fa-lg"></i> Telegram
+        </a>
+        
+        <a class="link-btn vk-btn" href="https://vk.com" target="_blank">
+            <i class="fab fa-vk fa-lg"></i> ВКонтакте
+        </a>
     </div>
 
 </body>
