@@ -17,6 +17,7 @@
             --text-sub: #a1a1aa;
             --btn-bg: rgba(39, 39, 42, 0.6);
             --tree-color: rgba(30, 5, 5, 0.4);
+            --toggle-text-color: rgba(255, 255, 255, 0.7);
         }
 
         [data-theme="light"] {
@@ -28,6 +29,7 @@
             --text-sub: #4b5563;
             --btn-bg: rgba(243, 244, 246, 0.8);
             --tree-color: rgba(200, 180, 180, 0.3);
+            --toggle-text-color: rgba(31, 41, 55, 0.8);
         }
 
         body {
@@ -89,7 +91,7 @@
         }
 
         [data-theme="light"] .snowflake {
-            color: #93c5fd; /* В светлой теме снежинки слегка голубоватые, чтобы их было видно */
+            color: #93c5fd; /* В светлой теме снежинки слегка голубоватые */
         }
 
         @keyframes fall {
@@ -105,18 +107,34 @@
             }
         }
 
-        /* Кнопка переключения темы (Луна / Солнце) */
-        .theme-toggle {
+        /* Блок управления темой в верхнем правом углу */
+        .theme-container {
             position: absolute;
             top: 20px;
             right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px; /* Расстояние между текстом и кнопкой */
+            z-index: 10;
+        }
+
+        /* Стили для текстовой надписи переключателя */
+        .theme-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--toggle-text-color);
+            user-select: none;
+            transition: color 0.5s ease;
+        }
+
+        /* Кнопка переключения темы (Луна / Солнце) */
+        .theme-toggle {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             color: var(--text-main);
             padding: 12px;
             border-radius: 50%;
             cursor: pointer;
-            z-index: 10;
             font-size: 18px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
@@ -217,10 +235,13 @@
 </head>
 <body>
 
-    <!-- Кнопка смены темы -->
-    <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">
-        <i class="fas fa-moon" id="theme-icon"></i>
-    </button>
+    <!-- Блок смены темы (Текст слева + Кнопка справа) -->
+    <div class="theme-container">
+        <span class="theme-text" id="theme-text">Переключить тему на светлую</span>
+        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+    </div>
 
     <!-- Контейнер для эффекта снега -->
     <div id="snow-container"></div>
@@ -247,39 +268,29 @@
 
     <!-- Скрипт для работы снега и смены тем -->
     <script>
-        // --- Логика переключения тем (Солнце / Луна) ---
+        // --- Логика переключения тем (Солнце / Луна + Интерактивный текст) ---
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
             
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.className = 'fas fa-moon'; // Включаем Луну для темной темы
+                icon.className = 'fas fa-moon'; // Включаем Луну
+                text.innerText = 'Переключить тему на светлую'; // Меняем текст
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.className = 'fas fa-sun'; // Включаем Солнце для светлой темы
+                icon.className = 'fas fa-sun'; // Включаем Солнце
+                text.innerText = 'Переключить тему на тёмную'; // Меняем текст
             }
         }
 
         // --- ГЕНЕРАТОР ПАДАЮЩЕГО СНЕГА ---
         const snowContainer = document.getElementById('snow-container');
-        const snowflakesCount = 40; // Количество одновременно падающих снежинок
-        const snowSymbols = ['❄', '•', '✧']; // Разные формы снежинок
+        const snowflakesCount = 40;
+        const snowSymbols = ['❄', '•', '✧'];
 
         for (let i = 0; i < snowflakesCount; i++) {
             const flake = document.createElement('div');
             flake.className = 'snowflake';
             
-            // Случайные параметры для каждой снежинки
-            flake.innerText = snowSymbols[Math.floor(Math.random() * snowSymbols.length)];
-            flake.style.left = Math.random() * 100 + 'vw';
-            flake.style.fontSize = (Math.random() * 14 + 8) + 'px'; // Размер от 8px до 22px
-            flake.style.animationDuration = (Math.random() * 7 + 5) + 's'; // Скорость падения от 5 до 12 сек
-            flake.style.animationDelay = Math.random() * 7 + 's'; // Задержка старта
-            flake.style.filter = `blur(${Math.random() * 1.5}px)`; // Легкое размытие для глубины объема
-            
-            snowContainer.appendChild(flake);
-        }
-    </script>
-</body>
-</html>
