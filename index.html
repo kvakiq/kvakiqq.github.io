@@ -10,32 +10,24 @@
         /* Базовые переменные для тем оформления */
         :root {
             /* Темная тема (по умолчанию) */
-            --bg-color-1: #0a0a0a;
-            --bg-color-2: #1a0505;
-            --bg-color-3: #3a0007;
-            --bg-color-4: #120002;
+            --bg-gradient: linear-gradient(-45deg, #0a0a0a, #1a0505, #3a0007, #120002, #0a0a0a);
             --card-bg: rgba(20, 20, 25, 0.8);
             --card-border: rgba(255, 0, 0, 0.15);
             --text-main: #ffffff;
             --text-sub: #a1a1aa;
             --btn-bg: rgba(39, 39, 42, 0.6);
             --tree-color: rgba(30, 5, 5, 0.4);
-            --toggle-text-color: rgba(255, 255, 255, 0.7);
         }
 
         [data-theme="light"] {
             /* Светлая тема */
-            --bg-color-1: #f5f7fa;
-            --bg-color-2: #eddcd9;
-            --bg-color-3: #fbe8e7;
-            --bg-color-4: #e0f2fe;
+            --bg-gradient: linear-gradient(-45deg, #f5f7fa, #eddcd9, #fbe8e7, #e0f2fe, #f5f7fa);
             --card-bg: rgba(255, 255, 255, 0.8);
             --card-border: rgba(239, 68, 68, 0.2);
             --text-main: #1f2937;
             --text-sub: #4b5563;
             --btn-bg: rgba(243, 244, 246, 0.8);
             --tree-color: rgba(200, 180, 180, 0.3);
-            --toggle-text-color: rgba(31, 41, 55, 0.8);
         }
 
         body {
@@ -48,14 +40,12 @@
             align-items: center;
             min-height: 100vh;
             color: var(--text-main);
-            
-            /* Динамический фон через CSS-переменные */
-            background: linear-gradient(-45deg, var(--bg-color-1), var(--bg-color-2), var(--bg-color-3), var(--bg-color-4), var(--bg-color-1));
+            background: var(--bg-gradient);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             position: relative;
             overflow: hidden;
-            transition: color 0.4s ease;
+            transition: background 0.5s ease;
         }
 
         /* Анимация переливания фоновых цветов */
@@ -75,7 +65,7 @@
             fill: var(--tree-color);
             z-index: 1;
             pointer-events: none;
-            transition: fill 0.4s ease;
+            transition: fill 0.5s ease;
         }
 
         /* Контейнер для падающего снега */
@@ -99,7 +89,7 @@
         }
 
         [data-theme="light"] .snowflake {
-            color: #93c5fd; /* В светлой теме снежинки слегка голубоватые */
+            color: #93c5fd; /* В светлой теме снежинки слегка голубоватые, чтобы их было видно */
         }
 
         @keyframes fall {
@@ -115,37 +105,21 @@
             }
         }
 
-        /* Блок управления темой в верхнем правом углу */
-        .theme-container {
+        /* Кнопка переключения темы (Луна / Солнце) */
+        .theme-toggle {
             position: absolute;
             top: 20px;
             right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 10;
-        }
-
-        /* Стили для текстовой надписи переключателя */
-        .theme-text {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--toggle-text-color);
-            user-select: none;
-            transition: color 0.4s ease;
-        }
-
-        /* Кнопка переключения темы */
-        .theme-toggle {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             color: var(--text-main);
             padding: 12px;
             border-radius: 50%;
             cursor: pointer;
+            z-index: 10;
             font-size: 18px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
             width: 45px;
             height: 45px;
             display: flex;
@@ -171,7 +145,7 @@
             z-index: 5;
             animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             opacity: 0;
-            transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            transition: all 0.5s ease;
         }
 
         @keyframes fadeInUp {
@@ -195,13 +169,11 @@
             color: var(--text-main);
             margin: 0 0 8px 0;
             font-weight: 700;
-            transition: color 0.4s ease;
         }
         .subtitle {
             font-size: 14px;
             color: var(--text-sub);
             margin: 0 0 30px 0;
-            transition: color 0.4s ease;
         }
 
         /* Кнопки-ссылки */
@@ -245,13 +217,10 @@
 </head>
 <body>
 
-    <!-- Блок смены темы -->
-    <div class="theme-container">
-        <span class="theme-text" id="theme-text">Переключить тему на светлую</span>
-        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">
-            <i class="fas fa-moon" id="theme-icon"></i>
-        </button>
-    </div>
+    <!-- Кнопка смены темы -->
+    <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
 
     <!-- Контейнер для эффекта снега -->
     <div id="snow-container"></div>
@@ -278,22 +247,39 @@
 
     <!-- Скрипт для работы снега и смены тем -->
     <script>
+        // --- Логика переключения тем (Солнце / Луна) ---
         function toggleTheme() {
-            const documentElement = document.documentElement;
+            const body = document.body;
             const icon = document.getElementById('theme-icon');
-            const text = document.getElementById('theme-text');
             
-            if (documentElement.getAttribute('data-theme') === 'light') {
-                documentElement.removeAttribute('data-theme');
-                icon.className = 'fas fa-moon';
-                text.innerText = 'Переключить тему на светлую';
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon'; // Включаем Луну для темной темы
             } else {
-                documentElement.setAttribute('data-theme', 'light');
-                icon.className = 'fas fa-sun';
-                text.innerText = 'Переключить тему на тёмную';
+                body.setAttribute('data-theme', 'light');
+                icon.className = 'fas fa-sun'; // Включаем Солнце для светлой темы
             }
         }
 
         // --- ГЕНЕРАТОР ПАДАЮЩЕГО СНЕГА ---
         const snowContainer = document.getElementById('snow-container');
-        const snowflakesCount = 40;
+        const snowflakesCount = 40; // Количество одновременно падающих снежинок
+        const snowSymbols = ['❄', '•', '✧']; // Разные формы снежинок
+
+        for (let i = 0; i < snowflakesCount; i++) {
+            const flake = document.createElement('div');
+            flake.className = 'snowflake';
+            
+            // Случайные параметры для каждой снежинки
+            flake.innerText = snowSymbols[Math.floor(Math.random() * snowSymbols.length)];
+            flake.style.left = Math.random() * 100 + 'vw';
+            flake.style.fontSize = (Math.random() * 14 + 8) + 'px'; // Размер от 8px до 22px
+            flake.style.animationDuration = (Math.random() * 7 + 5) + 's'; // Скорость падения от 5 до 12 сек
+            flake.style.animationDelay = Math.random() * 7 + 's'; // Задержка старта
+            flake.style.filter = `blur(${Math.random() * 1.5}px)`; // Легкое размытие для глубины объема
+            
+            snowContainer.appendChild(flake);
+        }
+    </script>
+</body>
+</html>
