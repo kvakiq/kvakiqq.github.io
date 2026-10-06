@@ -4,10 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Моя визитка</title>
-    <!-- Подключаем шрифты для иконок соцсетей -->
+    <!-- Подключаем иконки соцсетей и тем -->
     <link rel="stylesheet" href="https://cloudflare.com">
     <style>
-        /* Базовые настройки и темный черно-красный фон с мягким переливом */
+        /* Базовые переменные для тем оформления */
+        :root {
+            /* Темная тема (по умолчанию) */
+            --bg-gradient: linear-gradient(-45deg, #0a0a0a, #1a0505, #3a0007, #120002, #0a0a0a);
+            --card-bg: rgba(20, 20, 25, 0.8);
+            --card-border: rgba(255, 0, 0, 0.15);
+            --text-main: #ffffff;
+            --text-sub: #a1a1aa;
+            --btn-bg: rgba(39, 39, 42, 0.6);
+            --tree-color: rgba(30, 5, 5, 0.4);
+        }
+
+        [data-theme="light"] {
+            /* Светлая тема */
+            --bg-gradient: linear-gradient(-45deg, #f5f7fa, #eddcd9, #fbe8e7, #e0f2fe, #f5f7fa);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(239, 68, 68, 0.2);
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
+            --btn-bg: rgba(243, 244, 246, 0.8);
+            --tree-color: rgba(200, 180, 180, 0.3);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
@@ -17,13 +39,13 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #e2e8f0;
-            
-            /* Черно-красный глубокий градиент с эффектом тления */
-            background: linear-gradient(-45deg, #0a0a0a, #1a0505, #3a0007, #120002, #0a0a0a);
+            color: var(--text-main);
+            background: var(--bg-gradient);
             background-size: 400% 400%;
-            animation: gradientBG 12s ease infinite;
-            overflow: hidden; /* Скрывает полосы прокрутки при анимации появления */
+            animation: gradientBG 15s ease infinite;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.5s ease;
         }
 
         /* Анимация переливания фоновых цветов */
@@ -33,127 +55,187 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Стильная темная карточка с анимацией появления */
+        /* Силуэты деревьев на фоне (векторная графика) */
+        .forest-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 180px;
+            fill: var(--tree-color);
+            z-index: 1;
+            pointer-events: none;
+            transition: fill 0.5s ease;
+        }
+
+        /* Контейнер для падающего снега */
+        #snow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: #fff;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+
+        [data-theme="light"] .snowflake {
+            color: #93c5fd; /* В светлой теме снежинки слегка голубоватые, чтобы их было видно */
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% {
+                transform: translateY(105vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Кнопка переключения темы (Луна / Солнце) */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        /* Карточка профиля */
         .card {
-            background: rgba(20, 20, 25, 0.8);
+            background: var(--card-bg);
             padding: 40px 30px;
             border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             text-align: center;
             width: 100%;
             max-width: 340px;
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 0, 0, 0.15); /* Едва заметная красная неоновая рамка */
-            
-            /* Подключение анимации появления */
+            border: 1px solid var(--card-border);
+            z-index: 5;
             animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-            opacity: 0; /* Изначально скрыта до начала анимации */
+            opacity: 0;
+            transition: all 0.5s ease;
         }
 
-        /* Анимация плавного проявления карточки снизу вверх */
         @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Круглая аватарка */
+        /* Аватарка */
         .avatar {
             width: 96px;
             height: 96px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             margin-bottom: 15px;
         }
 
-        /* Имя и подпись */
         h1 {
             font-size: 24px;
-            color: #ffffff;
+            color: var(--text-main);
             margin: 0 0 8px 0;
             font-weight: 700;
-            letter-spacing: -0.5px;
         }
         .subtitle {
             font-size: 14px;
-            color: #a1a1aa;
+            color: var(--text-sub);
             margin: 0 0 30px 0;
         }
 
-        /* Базовый стиль кнопок-ссылок */
+        /* Кнопки-ссылки */
         .link-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px; /* Расстояние между иконкой и текстом */
+            gap: 12px;
             margin-bottom: 14px;
             padding: 14px;
-            background: rgba(39, 39, 42, 0.6);
-            color: #ffffff;
+            background: var(--btn-bg);
+            color: var(--text-main);
             text-decoration: none;
             border-radius: 14px;
             font-weight: 600;
             font-size: 16px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Белые иконки по умолчанию внутри кнопок */
-        .link-btn i {
-            color: #ffffff;
-            transition: transform 0.3s ease;
-        }
+        .link-btn i { transition: transform 0.3s ease; }
+        .link-btn:hover { transform: translateY(-3px); }
+        .link-btn:hover i { transform: scale(1.1); }
 
-        /* Эффект при наведении на любую кнопку */
-        .link-btn:hover {
-            transform: translateY(-3px);
-            color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        /* Слегка увеличиваем иконку при наведении */
-        .link-btn:hover i {
-            transform: scale(1.1);
-        }
-
-        /* Фирменный стиль Telegram при наведении */
+        /* Цвета брендов при наведении */
         .tg-btn:hover {
             background: #24A1DE;
             box-shadow: 0 6px 20px rgba(36, 161, 222, 0.4);
             border-color: #24A1DE;
+            color: #fff;
         }
-
-        /* Фирменный стиль ВКонтакте при наведении */
         .vk-btn:hover {
             background: #0077FF;
             box-shadow: 0 6px 20px rgba(0, 119, 255, 0.4);
             border-color: #0077FF;
+            color: #fff;
         }
 
-        /* Последняя кнопка без нижнего отступа */
-        .link-btn:last-child {
-            margin-bottom: 0;
-        }
+        .link-btn:last-child { margin-bottom: 0; }
     </style>
 </head>
 <body>
 
+    <!-- Кнопка смены темы -->
+    <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+
+    <!-- Контейнер для эффекта снега -->
+    <div id="snow-container"></div>
+
+    <!-- Силуэт леса на фоне -->
+    <svg class="forest-bg" viewBox="0 0 1200 180" preserveAspectRatio="none">
+        <path d="M0,180 L1200,180 L1200,120 L1150,140 L1100,110 L1050,130 L1000,90 L950,120 L900,100 L850,130 L800,85 L750,115 L700,95 L650,125 L600,80 L550,110 L500,90 L450,120 L400,85 L350,115 L300,95 L250,130 L200,90 L150,120 L100,100 L50,135 L0,110 Z"/>
+    </svg>
+
+    <!-- Основная карточка визитки -->
     <div class="card">
-        <!-- Ваша аватарка с GitHub (замените 'ваш_логин' на ваш никнейм на GitHub) -->
         <img class="avatar" src="https://github.com" alt="Аватар">
-        
         <h1>Ваше Имя</h1>
         <p class="subtitle">Краткое описание профиля</p>
 
-        <!-- Блок ссылок с иконками и фирменными классами (tg-btn и vk-btn) -->
         <a class="link-btn tg-btn" href="https://t.me" target="_blank">
             <i class="fab fa-telegram fa-lg"></i> Telegram
         </a>
@@ -163,5 +245,41 @@
         </a>
     </div>
 
+    <!-- Скрипт для работы снега и смены тем -->
+    <script>
+        // --- Логика переключения тем (Солнце / Луна) ---
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon'; // Включаем Луну для темной темы
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.className = 'fas fa-sun'; // Включаем Солнце для светлой темы
+            }
+        }
+
+        // --- ГЕНЕРАТОР ПАДАЮЩЕГО СНЕГА ---
+        const snowContainer = document.getElementById('snow-container');
+        const snowflakesCount = 40; // Количество одновременно падающих снежинок
+        const snowSymbols = ['❄', '•', '✧']; // Разные формы снежинок
+
+        for (let i = 0; i < snowflakesCount; i++) {
+            const flake = document.createElement('div');
+            flake.className = 'snowflake';
+            
+            // Случайные параметры для каждой снежинки
+            flake.innerText = snowSymbols[Math.floor(Math.random() * snowSymbols.length)];
+            flake.style.left = Math.random() * 100 + 'vw';
+            flake.style.fontSize = (Math.random() * 14 + 8) + 'px'; // Размер от 8px до 22px
+            flake.style.animationDuration = (Math.random() * 7 + 5) + 's'; // Скорость падения от 5 до 12 сек
+            flake.style.animationDelay = Math.random() * 7 + 's'; // Задержка старта
+            flake.style.filter = `blur(${Math.random() * 1.5}px)`; // Легкое размытие для глубины объема
+            
+            snowContainer.appendChild(flake);
+        }
+    </script>
 </body>
 </html>
